@@ -1,9 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
-import styled, { keyframes } from "styled-components";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import styled, { keyframes, css } from "styled-components";
 import kitty from "../images/kitty.jpg";
 import mymelody from "../images/mymelody.jpg";
 import pompompurin from "../images/pompompurin.jpg";
 import pochacco from "../images/pochacco.jpg";
+
+import kittyMouse from "../images/kittyMouse.png";
 
 import Button from "../components/common/Button";
 
@@ -79,7 +81,7 @@ const fadeIn = keyframes`
 const slideDown = keyframes`
   0% {
     opacity: 0;
-    transform: translateY(-200px);
+    transform: translateY(-50px);
   }
   100% {
     opacity: 1;
@@ -118,6 +120,43 @@ const LotteryResultContainer = styled.div`
   }
 `;
 
+const jump = keyframes`
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+`;
+
+const MouseStyle = styled.div<{ x: number; y: number }>`
+  position: absolute;
+  top: ${(props) => props.y + 5}px;
+  left: ${(props) => props.x + 5}px;
+  width: 30px;
+  height: 25px;
+  cursor: pointer;
+  transition: 0.1s;
+  /* @media screen and (max-width: 500px) {
+    // safari에서는 작동하지 않음
+    transition: 0.5s;
+    width: 100px;
+    height: 100px;
+  } */
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  animation: ${jump} 1s ease-in-out infinite;
+`;
+
 const characters = [
   {
     name: "kitty",
@@ -143,6 +182,9 @@ const Home = () => {
   const [fadeTime, setfadeTime] = useState(1000);
 
   const [lotteryResult, setLotteryResult] = useState(characters[0]);
+
+  // 마우스를 따라다니는 이미지
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   // useRef를 사용하여 DOM에 접근
   const kittyRef = useRef<HTMLImageElement>(null);
@@ -187,8 +229,17 @@ const Home = () => {
     return () => clearInterval(interval);
   }, [activeImage, fadeTime]);
 
+  /** 마우스 이벤트 */
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    setMousePosition({
+      x: e.clientX,
+      y: e.clientY,
+    });
+  };
+
   return (
-    <>
+    <div onMouseMove={handleMouseMove}>
       <Header>산리오 캐릭터즈 칙칙폭폭</Header>
       <HomeStyle className="Home">
         <GhachaContainer>
@@ -207,7 +258,7 @@ const Home = () => {
               // setactiveImage(characters[randomIndex]);
               setactiveImage(characters[3]);
               setLotteryResult(characters[3]);
-            }, 5000);
+            }, 6000);
           }}
         >
           뽑기
@@ -216,10 +267,25 @@ const Home = () => {
         {lotteryResult.name === "pochacco" && (
           <LotteryResultContainer>
             <img className="lotteryResult" src={lotteryResult.image}></img>
+            <div>{lotteryResult.name}</div>
           </LotteryResultContainer>
         )}
       </HomeStyle>
-    </>
+      <MouseStyle
+        x={
+          mousePosition.x > window.innerWidth - 50
+            ? window.innerWidth - 50
+            : mousePosition.x
+        }
+        y={
+          mousePosition.y > window.innerHeight - 50
+            ? window.innerHeight - 50
+            : mousePosition.y
+        }
+      >
+        <img src={kittyMouse} alt="kittyMouse"></img>
+      </MouseStyle>
+    </div>
   );
 };
 
