@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/gacha/static/css/main.bc765974.css",
-    "main.js": "/gacha/static/js/main.5497d7b5.js",
+    "main.js": "/gacha/static/js/main.f57827d9.js",
     "static/js/787.e6376d77.chunk.js": "/gacha/static/js/787.e6376d77.chunk.js",
     "static/media/mymelody.jpg": "/gacha/static/media/mymelody.673e86fb5be60d88b50d.jpg",
     "static/media/kitty.jpg": "/gacha/static/media/kitty.f2b80ff846d7535dbc56.jpg",
@@ -9,11 +9,11 @@
     "static/media/pochacco.jpg": "/gacha/static/media/pochacco.6b5aed1536429c1b2e9d.jpg",
     "index.html": "/gacha/index.html",
     "main.bc765974.css.map": "/gacha/static/css/main.bc765974.css.map",
-    "main.5497d7b5.js.map": "/gacha/static/js/main.5497d7b5.js.map",
+    "main.f57827d9.js.map": "/gacha/static/js/main.f57827d9.js.map",
     "787.e6376d77.chunk.js.map": "/gacha/static/js/787.e6376d77.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.bc765974.css",
-    "static/js/main.5497d7b5.js"
+    "static/js/main.f57827d9.js"
   ]
 }
