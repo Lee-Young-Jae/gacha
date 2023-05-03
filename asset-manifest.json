@@ -1,9 +1,10 @@
 {
   "files": {
     "main.css": "/gacha/static/css/main.bc765974.css",
-    "main.js": "/gacha/static/js/main.4aefed3a.js",
+    "main.js": "/gacha/static/js/main.7113a1cc.js",
     "static/js/787.e6376d77.chunk.js": "/gacha/static/js/787.e6376d77.chunk.js",
     "static/media/background.jpg": "/gacha/static/media/background.6c835b6cb6e694d5427a.jpg",
+    "static/media/pochaccoMouse.png": "/gacha/static/media/pochaccoMouse.543747d5982e4b7a3d57.png",
     "static/media/mymelodyNoBackground.png": "/gacha/static/media/mymelodyNoBackground.e7cc836157f2cc0aaa4e.png",
     "static/media/kittyNoBackground.png": "/gacha/static/media/kittyNoBackground.5f5a0a93cef166b8db34.png",
     "static/media/pompompurinNoBackground.png": "/gacha/static/media/pompompurinNoBackground.9d6dd3bcf31607a32db4.png",
@@ -11,11 +12,11 @@
     "static/media/kittyMouse.png": "/gacha/static/media/kittyMouse.548e8a5d5d74fe8b4f1d.png",
     "index.html": "/gacha/index.html",
     "main.bc765974.css.map": "/gacha/static/css/main.bc765974.css.map",
-    "main.4aefed3a.js.map": "/gacha/static/js/main.4aefed3a.js.map",
+    "main.7113a1cc.js.map": "/gacha/static/js/main.7113a1cc.js.map",
     "787.e6376d77.chunk.js.map": "/gacha/static/js/787.e6376d77.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.bc765974.css",
-    "static/js/main.4aefed3a.js"
+    "static/js/main.7113a1cc.js"
   ]
 }
