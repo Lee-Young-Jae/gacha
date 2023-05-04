@@ -1,11 +1,13 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import styled, { keyframes, css } from "styled-components";
-import kitty from "../images/kitty.jpg";
-import mymelody from "../images/mymelody.jpg";
-import pompompurin from "../images/pompompurin.jpg";
-import pochacco from "../images/pochacco.jpg";
+import React, { useEffect, useRef, useState } from "react";
+import styled, { keyframes } from "styled-components";
 
+import kitty from "../images/kittyNoBackground.png";
+import mymelody from "../images/mymelodyNoBackground.png";
+import pompompurin from "../images/pompompurinNoBackground.png";
+import pochacco from "../images/pochaccoNoBackground.png";
 import kittyMouse from "../images/kittyMouse.png";
+import pochaccoMouse from "../images/pochaccoMouse.png";
+import backgroundImg from "../images/background.jpg";
 
 import Button from "../components/common/Button";
 
@@ -19,16 +21,62 @@ const HomeStyle = styled.div`
   align-items: center;
 `;
 
-const Header = styled.div`
+type HeaderProps = {
+  fullScreen: boolean;
+  x: number;
+  y: number;
+};
+
+const HeaderImgPositionWeight = {
+  x: 0,
+  y: 0,
+};
+
+let headerMove = false;
+
+const Header = styled.div<HeaderProps>`
   font-family: "Dongle", sans-serif;
   width: 100%;
-  height: 80px;
+  // fullscrren이 true 일때
+  height: ${(props: { fullScreen: boolean }) =>
+    props.fullScreen ? "1000px" : "100px"};
+
   box-sizing: border-box;
-  font-size: 50px;
+  font-size: 55px;
   font-weight: 100;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-image: url(${backgroundImg});
+  background-size: cover;
+
+  transition: 3s;
+  color: #ffffff;
+
+  // 마우스 위치에 따라 background 이미지 위치 수정
+  /* background-position: ${(props: { x: number; y: number }) =>
+    `${~~(-props.x / 30)}px ${~~(-props.y / 30)}px`}; */
+
+  // 마우스 위치에 따라 background 이미지 위치 수정
+  background-position: ${(props: { x: number; y: number }) => {
+    if (props.x > window.innerWidth / 2) {
+      HeaderImgPositionWeight.x -= 10;
+    } else {
+      HeaderImgPositionWeight.x += 10;
+    }
+
+    if (props.y > window.innerHeight / 2) {
+      HeaderImgPositionWeight.y -= 10;
+    } else {
+      HeaderImgPositionWeight.y += 10;
+    }
+
+    return headerMove
+      ? `${HeaderImgPositionWeight.x + ~~(-props.x / 30)}px ${
+          HeaderImgPositionWeight.y + ~~(-props.y / 30)
+        }px`
+      : `${~~(-props.x / 30)}px ${~~(-props.y / 30)}px`;
+  }};
 `;
 
 // fadeImage
@@ -46,25 +94,29 @@ const fadeImage = keyframes`
 `;
 
 const GhachaContainer = styled.div`
-  width: 400px;
+  width: 300px;
+  @media screen and (max-width: 768px) {
+    width: 80%;
+  }
+
   background-color: #ffffff;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
+  padding: 25px;
   box-sizing: border-box;
   border-radius: 10px;
   margin-top: 20px;
   margin-bottom: 10px;
   img {
-    width: 45%;
+    width: 44%;
     height: 45%;
-    margin: 10px 0;
-    border-radius: 10px;
+    margin: 10px 0 0 0;
   }
   .active {
-    animation: ${fadeImage} 1s;
+    animation: ${fadeImage} 1.2s;
+    animation-iteration-count: 3;
   }
 `;
 
@@ -88,10 +140,10 @@ const slideDown = keyframes`
     transform: translateY(0px);
   }
 `;
+
 const LotteryResultContainer = styled.div`
   width: 200px;
   height: 200px;
-  background-color: #ffffff;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -101,22 +153,40 @@ const LotteryResultContainer = styled.div`
   border-radius: 10px;
   margin-top: 20px;
   margin-bottom: 10px;
+  transition: 1s;
 
   animation: ${fadeIn} 5s;
-  font-size: 55px;
+  font-size: 50px;
 
   .lotteryResult {
-    width: 40%;
-    height: 40%;
-    object-fit: cover;
-    font-size: 20px;
-    margin-top: 10px;
+    width: 30%;
+    height: 30%;
+    object-fit: contain;
     animation: ${slideDown} 1s;
     padding: 2px;
+    transition: 1s;
 
-    // 캡슐 처럼
     border-radius: 15px;
-    box-shadow: 0 0 50px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+
+    &:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.7);
+    }
+  }
+
+  .nameBox {
+    width: 100%;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: 700;
+    margin-top: 10px;
+    animation: ${slideDown} 1s;
+    transition: 1s;
   }
 `;
 
@@ -140,18 +210,10 @@ const MouseStyle = styled.div<{ x: number; y: number }>`
   height: 25px;
   cursor: pointer;
   transition: 0.1s;
-  /* @media screen and (max-width: 500px) {
-    // safari에서는 작동하지 않음
-    transition: 0.5s;
-    width: 100px;
-    height: 100px;
-  } */
 
   img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
+    width: 140%;
+    object-fit: contain;
   }
 
   animation: ${jump} 1s ease-in-out infinite;
@@ -176,15 +238,30 @@ const characters = [
   },
 ];
 
+const mouseImages = {
+  kitty: kitty,
+  mymelody: mymelody,
+  pompompurin: pompompurin,
+  pochacco: pochacco,
+  basekitty: kittyMouse,
+};
+
 const Home = () => {
   const [activeImage, setactiveImage] = useState(characters[0]);
 
   const [fadeTime, setfadeTime] = useState(1000);
 
-  const [lotteryResult, setLotteryResult] = useState(characters[0]);
+  const [lotteryResult, setLotteryResult] = useState({
+    name: "",
+    image: "",
+  });
+
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [isDrawn, setIsDrawn] = useState(false);
 
   // 마우스를 따라다니는 이미지
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [mouseImage, setMouseImage] = useState([kittyMouse]);
 
   // useRef를 사용하여 DOM에 접근
   const kittyRef = useRef<HTMLImageElement>(null);
@@ -217,6 +294,8 @@ const Home = () => {
 
   // 1초 단위로 이미지 교체
   useEffect(() => {
+    if (isDrawn) return;
+
     const interval = setInterval(() => {
       const max = characters.length;
       const beforeIndex = characters.findIndex(
@@ -227,7 +306,7 @@ const Home = () => {
     }, fadeTime);
 
     return () => clearInterval(interval);
-  }, [activeImage, fadeTime]);
+  }, [activeImage, fadeTime, isDrawn]);
 
   /** 마우스 이벤트 */
 
@@ -240,7 +319,13 @@ const Home = () => {
 
   return (
     <div onMouseMove={handleMouseMove}>
-      <Header>산리오 캐릭터즈 칙칙폭폭</Header>
+      <Header
+        x={mousePosition.x}
+        y={mousePosition.y}
+        fullScreen={mouseImage.length >= 4}
+      >
+        산리오 캐릭터즈 칙칙폭폭
+      </Header>
       <HomeStyle className="Home">
         <GhachaContainer>
           <img ref={kittyRef} src={kitty} alt="kitty" />
@@ -250,41 +335,143 @@ const Home = () => {
         </GhachaContainer>
         <Button
           onClick={() => {
+            if (isDrawing) return;
+
             setfadeTime(200);
+            setIsDrawing(true);
             setTimeout(() => {
               setfadeTime(1000);
-              // const randomIndex = Math.floor(Math.random() * 4);
-              // setLotteryResult(characters[randomIndex].name);
-              // setactiveImage(characters[randomIndex]);
-              setactiveImage(characters[3]);
-              setLotteryResult(characters[3]);
+              const randomIndex = Math.floor(Math.random() * 4);
+              setLotteryResult(characters[randomIndex]);
+              setactiveImage(characters[randomIndex]);
+              // setactiveImage(characters[3]);
+              // setLotteryResult(characters[3]);
+
+              // 이벤트를 위한 코드로 삭제 요망
+              const isFirst = localStorage.getItem("isFirst");
+              if (!isFirst) {
+                localStorage.setItem("isFirst", "true");
+                setactiveImage(characters[3]);
+                setLotteryResult(characters[3]);
+              }
+              // 여기까지
+
+              setIsDrawing(false);
+              setIsDrawn(true);
+              setTimeout(() => {
+                setIsDrawn(false);
+              }, 2000);
             }, 6000);
           }}
         >
           뽑기
         </Button>
 
-        {lotteryResult.name === "pochacco" && (
+        {lotteryResult.name !== "" && !isDrawing && (
           <LotteryResultContainer>
-            <img className="lotteryResult" src={lotteryResult.image}></img>
-            <div>{lotteryResult.name}</div>
+            {lotteryResult && (
+              <>
+                <img
+                  onClick={() => {
+                    if (
+                      mouseImage.includes(
+                        mouseImages[
+                          lotteryResult.name as keyof typeof mouseImages
+                        ]
+                      )
+                    ) {
+                      return;
+                    }
+
+                    // basekitty 이미지가 있다면 교체
+                    if (mouseImage.includes(mouseImages.basekitty)) {
+                      setMouseImage([
+                        mouseImages[
+                          lotteryResult.name as keyof typeof mouseImages
+                        ],
+                      ]);
+                      return;
+                    }
+
+                    setMouseImage([
+                      ...mouseImage,
+                      mouseImages[
+                        lotteryResult.name as keyof typeof mouseImages
+                      ],
+                    ]);
+                  }}
+                  className="lotteryResult"
+                  src={lotteryResult.image}
+                  alt={lotteryResult.name}
+                ></img>
+                <div className="nameBox">{lotteryResult.name}</div>
+              </>
+            )}
           </LotteryResultContainer>
         )}
       </HomeStyle>
       <MouseStyle
         x={
           mousePosition.x > window.innerWidth - 50
-            ? window.innerWidth - 50
+            ? window.innerWidth - 70
             : mousePosition.x
         }
         y={
           mousePosition.y > window.innerHeight - 50
-            ? window.innerHeight - 50
+            ? window.innerHeight - 70
             : mousePosition.y
         }
       >
-        <img src={kittyMouse} alt="kittyMouse"></img>
+        <img src={mouseImage[0]} alt="Mouse"></img>
       </MouseStyle>
+      {mouseImage.length >= 2 && (
+        <MouseStyle
+          x={
+            mousePosition.x > window.innerWidth - 50
+              ? window.innerWidth - 70
+              : mousePosition.x + 20
+          }
+          y={
+            mousePosition.y > window.innerHeight - 50
+              ? window.innerHeight - 70
+              : mousePosition.y + 30
+          }
+        >
+          <img src={mouseImage[1]} alt="Mouse"></img>
+        </MouseStyle>
+      )}
+      {mouseImage.length >= 3 && (
+        <MouseStyle
+          x={
+            mousePosition.x > window.innerWidth - 50
+              ? window.innerWidth - 70
+              : mousePosition.x + 40
+          }
+          y={
+            mousePosition.y > window.innerHeight - 50
+              ? window.innerHeight - 70
+              : mousePosition.y + 10
+          }
+        >
+          <img src={mouseImage[2]} alt="Mouse"></img>
+        </MouseStyle>
+      )}
+      {mouseImage.length >= 4 && (
+        <MouseStyle
+          x={
+            mousePosition.x > window.innerWidth - 50
+              ? window.innerWidth - 70
+              : mousePosition.x + 60
+          }
+          y={
+            mousePosition.y > window.innerHeight - 50
+              ? window.innerHeight - 70
+              : mousePosition.y + 40
+          }
+        >
+          <img src={mouseImage[3]} alt="Mouse"></img>
+        </MouseStyle>
+      )}
     </div>
   );
 };
